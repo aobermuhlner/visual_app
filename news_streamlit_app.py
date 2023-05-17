@@ -3,7 +3,7 @@ import pandas as pd
 import itertools
 import holoviews as hv
 from holoviews import opts, dim, Dataset
-from bokeh.models import CustomJS, DatePicker
+
 
 def main():
     path = 'data/without_content.tsv.xz'
@@ -15,15 +15,28 @@ def main():
 
     st.title('Chord-Diagramm')
 
+    # Extract dates
+
     selected_date = st.date_input("Wähle Datum",
                                   value=pd.to_datetime('2022-01-01'),
                                   min_value=pd.to_datetime('2022-01-01'),
                                   max_value=pd.to_datetime('2022-12-31'))
+    selected_date = pd.to_datetime(selected_date)
 
-    filtered_data = df[df['date'] == pd.to_datetime(selected_date)]['countries'].tolist()
+    # Filter data by date
+    filtered_df = df[df['date'] == selected_date]
+
+    # Filter data by category with streamlit dropdown
+    st.subheader('Wähle Kategorie')
+    category = st.selectbox('Kategorie', df['category'].unique())
+    filtered_df = filtered_df[filtered_df['category'] == category]
+
+    # Create chord diagram
+
+    data = filtered_df['countries'].tolist()
     threshold = 10
     edges_list = []
-    for connection in filtered_data:
+    for connection in data:
         for pair in itertools.combinations(connection, 2):
             edges_list.append(pair)
     edges_df = pd.DataFrame(edges_list, columns=['source', 'target'])
