@@ -13,28 +13,25 @@ def main():
 
     hv.extension('bokeh')
 
-    st.title('Chord-Diagramm')
 
-    # Extract dates
-
+    # Filter data by date with streamlit date input
     selected_date = st.date_input("Wähle Datum",
                                   value=pd.to_datetime('2022-01-01'),
                                   min_value=pd.to_datetime('2022-01-01'),
                                   max_value=pd.to_datetime('2022-12-31'))
     selected_date = pd.to_datetime(selected_date)
-
-    # Filter data by date
     filtered_df = df[df['date'] == selected_date]
 
     # Filter data by category with streamlit dropdown
-    st.subheader('Wähle Kategorie')
+
     categories = df['article_category'].unique()
     categories = ['Alle'] + list(categories)
-    category = st.selectbox('Kategorie', categories)
+    category = st.selectbox('Wähle Kategorie', categories)
     if category != 'Alle':
         filtered_df = filtered_df[filtered_df['article_category'] == category]
 
     # Create chord diagram
+    st.subheader('Beziehungen von Ländern in der Berichterstattung Schweizer Medien')
     data = filtered_df['countries'].tolist()
     threshold = 3
     edges_list = []
