@@ -35,9 +35,8 @@ def main():
         filtered_df = filtered_df[filtered_df['article_category'] == category]
 
     # Create chord diagram
-
     data = filtered_df['countries'].tolist()
-    threshold = 10
+    threshold = 3
     edges_list = []
     for connection in data:
         for pair in itertools.combinations(connection, 2):
