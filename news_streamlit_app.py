@@ -28,8 +28,11 @@ def main():
 
     # Filter data by category with streamlit dropdown
     st.subheader('Wähle Kategorie')
-    category = st.selectbox('Kategorie', df['article_category'].unique())
-    filtered_df = filtered_df[filtered_df['article_category'] == category]
+    categories = df['article_category'].unique()
+    categories = ['Alle'] + list(categories)
+    category = st.selectbox('Kategorie', categories)
+    if category != 'Alle':
+        filtered_df = filtered_df[filtered_df['article_category'] == category]
 
     # Create chord diagram
 
